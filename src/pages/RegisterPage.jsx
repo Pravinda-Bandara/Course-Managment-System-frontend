@@ -39,8 +39,8 @@ export function RegisterPage() {
                 password
             });
             navigate('/enrollment');
-            dispatch({ type: 'USER_SIGNIN', payload: data.userId });
-            localStorage.setItem('userInfo', JSON.stringify(data.userId));
+            dispatch({ type: 'USER_SIGNIN', payload: data });
+            localStorage.setItem('userInfo', JSON.stringify(data));
         } catch (err) {
             toast.error(getError(err), {
                 autoClose: 1000
