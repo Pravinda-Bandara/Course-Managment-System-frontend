@@ -11,7 +11,7 @@ import {RegisterPage} from "./pages/RegisterPage.jsx";
 
 import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
 import CoursesPage from "./pages/CoursesPage.jsx";
-import CourseDetailsPage1 from "./pages/CourseDetailsPage1.jsx";
+import CourseDetailsPage1 from "./pages/CourseDetailsPage.jsx";
 import UsersPage from "./pages/UsersPage.jsx";
 import {UserDetailsPage} from "./pages/UserDetailsPage.jsx";
 import ProtectedRoute from "./routeGuards /AdminRoute.jsx";
