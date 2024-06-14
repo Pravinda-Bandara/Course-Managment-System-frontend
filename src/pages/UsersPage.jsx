@@ -1,114 +1,174 @@
-// Import the necessary modules
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { useGetUsersQuery } from '../hooks/userHooks.js';
-import { useDeleteUserMutation, useUpdateUserMutation } from '../hooks/userHooks.js'; // Import the delete and update mutation hooks
+import { useNavigate } from "react-router-dom";
+import { useContext, useEffect, useState } from "react";
+import { Store } from "../Store";
+import { toast } from "react-toastify";
+import { deleteUser, getUsers, updateUser } from "../hooks/userHooks.js";
 
-// Define the UsersPage component
 function UsersPage() {
-    // Initialize state and hooks
     const navigate = useNavigate();
-    const { data: users, isLoading, error, refetch } = useGetUsersQuery();
-    const { mutateAsync: deleteUser } = useDeleteUserMutation(); // Use the delete mutation hook
-    const { mutateAsync: updateUser } = useUpdateUserMutation(); // Use the update mutation hook
-    const [editingUserId, setEditingUserId] = useState(null);
-    const [editedUserData, setEditedUserData] = useState({ name: '', email: '', role: '' });
+    const redirect = '/login';
+    const addNewUser = '/adduser';
 
-    // Handle loading and error states
-    if (isLoading) return <div>Loading...</div>;
-    if (error) return <div>Error: {error.message}</div>;
+    const { state, dispatch } = useContext(Store);
 
-    // Handle delete user function
-    async function handleDelete(userId) {
-        try {
-            await deleteUser(userId); // Call the delete mutation hook with the userId
-            refetch(); // Refetch the users data
-        } catch (error) {
-            console.error('Error deleting user:', error);
+    const [users, setUsers] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const [editingUserId, setEditingUserId] = useState('');
+    const [editedUserData, setEditedUserData] = useState({ name: '', email: '', role: '', number: '' });
+
+    useEffect(() => {
+        if (!state.userInfo) {
+            navigate(redirect);
+        } else {
+            fetchUsers();
         }
-    }
+    }, [state.userInfo, navigate]);
 
-    // Handle update user function
-    async function handleUpdate(userId) {
+    const fetchUsers = async () => {
         try {
-            const response = await updateUser(userId, editedUserData); // Call the update mutation hook with userId and editedUserData
-            setEditedUserData(response.user); // Update editedUserData with the response data
-            setEditingUserId(null); // Reset editingUserId
-            refetch(); // Refetch the users data
+            const data = await getUsers();
+            setUsers(data);
         } catch (error) {
-            console.error('Error updating user:', error);
+            setError(error.message || 'Error fetching users');
+        } finally {
+            setIsLoading(false);
         }
-    }
+    };
 
-    // Render the component
+    const handleEdit = (user) => {
+        setEditingUserId(user._id);
+        setEditedUserData({ name: user.name, email: user.email, role: user.role, number: user.number });
+    };
+
+    const handleDelete = async (userId, userName) => {
+        try {
+            await deleteUser(userId);
+            toast.success(`User "${userName}" has been deleted successfully!`);
+            fetchUsers();
+        } catch (error) {
+            toast.error(error.message || 'Error deleting user');
+        }
+    };
+
+    const handleSaveEdit = async () => {
+        try {
+            if (editingUserId) {
+                await updateUser(editingUserId, editedUserData);
+                toast.success('User details have been saved successfully!');
+                setEditingUserId('');
+                fetchUsers();
+            }
+        } catch (error) {
+            toast.error(error.message || 'Error updating user');
+        }
+    };
+
+    const handleCancelEdit = () => {
+        setEditingUserId('');
+        setEditedUserData({ name: '', email: '', role: '', number: '' });
+    };
+
+    const handleLogOut = () => {
+        dispatch({ type: 'USER_SIGNOUT' });
+        localStorage.removeItem('userInfo');
+        navigate(redirect);
+    };
+
     return (
-        <>
-            <h1>Users</h1>
-            <table>
-                <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Role</th>
-                    <th>Number</th>
-                    <th>Actions</th>
-                </tr>
-                </thead>
-                <tbody>
-                {users.map(user => (
-                    <tr key={user._id}>
-                        <td>
-                            {editingUserId === user._id ? (
-                                <input
-                                    type="text"
-                                    value={editedUserData.name}
-                                    onChange={e => setEditedUserData({ ...editedUserData, name: e.target.value })}
-                                />
-                            ) : (
-                                user.name
-                            )}
-                        </td>
-                        <td>
-                            {editingUserId === user._id ? (
-                                <input
-                                    type="text"
-                                    value={editedUserData.email}
-                                    onChange={e => setEditedUserData({ ...editedUserData, email: e.target.value })}
-                                />
-                            ) : (
-                                user.email
-                            )}
-                        </td>
-                        <td>
-                            {editingUserId === user._id ? (
-                                <input
-                                    type="text"
-                                    value={editedUserData.role}
-                                    onChange={e => setEditedUserData({ ...editedUserData, role: e.target.value })}
-                                />
-                            ) : (
-                                user.role
-                            )}
-                        </td>
-                        <td>{user.number}</td>
-                        <td>
-                            {editingUserId === user._id ? (
-                                <>
-                                    <button onClick={() => handleUpdate(user._id)}>Update</button>
-                                    <button onClick={() => setEditingUserId(null)}>Cancel</button>
-                                </>
-                            ) : (
-                                <>
-                                    <button onClick={() => setEditingUserId(user._id)}>Edit</button>
-                                    <button onClick={() => handleDelete(user._id)}>Delete</button>
-                                </>
-                            )}
-                        </td>
-                    </tr>
-                ))}
-                </tbody>
-            </table>
-        </>
+        <div>
+            <div>
+                <div>
+                    <div>
+                        <h1>Users</h1>
+                        <button type="button" onClick={() => navigate(addNewUser)}>
+                            Add new user
+                        </button>
+                    </div>
+                    <div>
+                        {isLoading ? (
+                            <div>Loading...</div>
+                        ) : error ? (
+                            <div>Error: {error}</div>
+                        ) : (
+                            <table>
+                                <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Role</th>
+                                    <th>Number</th>
+                                    <th>Actions</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {users.map((user) => (
+                                    <tr key={user._id}>
+                                        {editingUserId === user._id ? (
+                                            <>
+                                                <td>
+                                                    <input
+                                                        onChange={(e) => setEditedUserData({ ...editedUserData, name: e.target.value })}
+                                                        value={editedUserData.name}
+                                                        type="text"
+                                                    />
+                                                </td>
+                                                <td>
+                                                    <input
+                                                        onChange={(e) => setEditedUserData({ ...editedUserData, email: e.target.value })}
+                                                        value={editedUserData.email}
+                                                        type="text"
+                                                    />
+                                                </td>
+                                                <td>
+                                                    <input
+                                                        onChange={(e) => setEditedUserData({ ...editedUserData, role: e.target.value })}
+                                                        value={editedUserData.role}
+                                                        type="text"
+                                                    />
+                                                </td>
+                                                <td>
+                                                    <input
+                                                        onChange={(e) => setEditedUserData({ ...editedUserData, number: e.target.value })}
+                                                        value={editedUserData.number}
+                                                        type="text"
+                                                    />
+                                                </td>
+                                                <td>
+                                                    <button onClick={handleSaveEdit}>Save</button>
+                                                    <button onClick={handleCancelEdit}>Cancel</button>
+                                                </td>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <td><input disabled value={user.name} type="text" /></td>
+                                                <td><input disabled value={user.email} type="text" /></td>
+                                                <td><input disabled value={user.role} type="text" /></td>
+                                                <td><input disabled value={user.number} type="text" /></td>
+                                                <td>
+                                                    <button onClick={() => handleEdit(user)}>Edit</button>
+                                                    <button onClick={() => handleDelete(user._id, user.name)}>Delete</button>
+                                                    <button onClick={() => navigate(`/admin/users/${user._id}`)}>Details</button>
+                                                </td>
+                                            </>
+                                        )}
+                                    </tr>
+                                ))}
+                                </tbody>
+                            </table>
+                        )}
+                    </div>
+                </div>
+            </div>
+            <div>
+                <div>
+                    <i></i>
+                    <button type="button" onClick={handleLogOut}>
+                        LogOut
+                    </button>
+                </div>
+            </div>
+        </div>
     );
 }
 

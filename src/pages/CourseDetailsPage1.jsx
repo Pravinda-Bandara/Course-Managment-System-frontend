@@ -1,29 +1,33 @@
-import { useParams } from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
-
 import { Store } from "../Store.jsx";
-import apiClient from "../apiClient.js";
+import {  getCourseById, updateCourse, deleteCourse } from "../hooks/courseHooks.js";
+import {disenrollFromCourse, enrollInCourse, getEnrollmentStatus} from "../hooks/enrollmentHooks.js";
 
 const CourseDetailsPage = () => {
-    const { id } = useParams();
+    const { studentId, courseId } = useParams();
     const { state } = useContext(Store);
     const { userInfo } = state;
-    const userID = userInfo._id;
+    const userID = studentId;
 
-    const [enrolled, setEnrolled] = useState(null);
-    const [enrollmentId, setEnrollmentId] = useState(null);
+    const [enrolled, setEnrolled] = useState(false);
+    const [enrollmentId, setEnrollmentId] = useState(null); // Initialize enrollment ID state
     const [courseData, setCourseData] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [isEditing, setIsEditing] = useState(false); // Toggle edit mode
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchEnrollmentStatusAndCourseDetails = async () => {
             try {
-                const enrollmentResponse = await apiClient.get(`api/enrollments/status?studentId=${userID}&courseId=${id}`);
-                setEnrolled(enrollmentResponse.data.enrolled);
-                setEnrollmentId(enrollmentResponse.data.enrollmentId); // Assuming the response contains the enrollmentId
-                const courseResponse = await apiClient.get(`api/courses/${id}`);
-                setCourseData(courseResponse.data);
+                const enrollmentData = await getEnrollmentStatus(userID, courseId);
+                if (enrollmentData.enrolled) {
+                    setEnrolled(true);
+                    setEnrollmentId(enrollmentData.enrollmentId); // Store the enrollment ID if already enrolled
+                }
+                const courseData = await getCourseById(courseId);
+                setCourseData(courseData);
             } catch (err) {
                 setError(err.message);
             } finally {
@@ -32,16 +36,13 @@ const CourseDetailsPage = () => {
         };
 
         fetchEnrollmentStatusAndCourseDetails();
-    }, [id, userID]);
+    }, [courseId, userID]);
 
     const handleEnroll = async () => {
         try {
-            const response = await apiClient.post(`api/enrollments`, {
-                studentId: userID,
-                courseId: id,
-            });
+            const enrollmentData = await enrollInCourse(userID, courseId);
             setEnrolled(true);
-            setEnrollmentId(response.data._id); // Store the enrollment ID
+            setEnrollmentId(enrollmentData._id); // Store the enrollment ID
         } catch (err) {
             console.error('Error enrolling:', err);
             setError(err.message);
@@ -50,11 +51,47 @@ const CourseDetailsPage = () => {
 
     const handleDisenroll = async () => {
         try {
-            await apiClient.delete(`api/enrollments/${enrollmentId}`);
+            await disenrollFromCourse(enrollmentId); // Use stored enrollment ID to disenroll
             setEnrolled(false);
-            setEnrollmentId(null);
+            setEnrollmentId(null); // Reset enrollment ID state after disenrollment
         } catch (err) {
             console.error('Error disenrolling:', err);
+            setError(err.message);
+        }
+    };
+
+    const handleEditToggle = () => {
+        setIsEditing(!isEditing);
+    };
+
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setCourseData((prevData) => ({
+            ...prevData,
+            [name]: value,
+        }));
+    };
+
+    const handleSave = async () => {
+        try {
+            console.log(courseData+"before")
+            await updateCourse(courseId, courseData);
+            setIsEditing(false);
+            console.log('Course updated:', courseData);
+        } catch (err) {
+            console.error('Error updating course:', err);
+            setError(err.message);
+        }
+    };
+
+    const handleDelete = async () => {
+        try {
+            await deleteCourse(courseId);
+            console.log('Course deleted');
+            navigate('/courses')
+
+        } catch (err) {
+            console.error('Error deleting course:', err);
             setError(err.message);
         }
     };
@@ -67,10 +104,49 @@ const CourseDetailsPage = () => {
             <h1>Course Details</h1>
             {courseData && (
                 <>
-                    <p>Title: {courseData.title}</p>
-                    <p>Description: {courseData.description}</p>
-                    <p>Duration: {courseData.duration}</p>
-                    <p>Instructor: {courseData.instructor}</p>
+                    {isEditing ? (
+                        <>
+                            <input
+                                type="text"
+                                name="title"
+                                value={courseData.title}
+                                onChange={handleInputChange}
+                            />
+                            <input
+                                type="text"
+                                name="description"
+                                value={courseData.description}
+                                onChange={handleInputChange}
+                            />
+                            <input
+                                type="number"
+                                name="duration"
+                                value={courseData.duration}
+                                onChange={handleInputChange}
+                            />
+                            <input
+                                type="text"
+                                name="instructor"
+                                value={courseData.instructor}
+                                onChange={handleInputChange}
+                            />
+                            <input
+                                type="text"
+                                name="instructor_num"
+                                value={courseData.instructor_num}
+                                onChange={handleInputChange}
+                            />
+                            <button onClick={handleSave}>Save</button>
+                        </>
+                    ) : (
+                        <>
+                            <p>Title: {courseData.title}</p>
+                            <p>Description: {courseData.description}</p>
+                            <p>Duration: {courseData.duration}</p>
+                            <p>Instructor: {courseData.instructor}</p>
+                            <p>Instructor Number: {courseData.instructor_num}</p>
+                        </>
+                    )}
                 </>
             )}
             <p>Enrolled: {enrolled ? "Yes" : "No"}</p>
@@ -78,6 +154,14 @@ const CourseDetailsPage = () => {
                 <button onClick={handleDisenroll}>Disenroll</button>
             ) : (
                 <button onClick={handleEnroll}>Enroll</button>
+            )}
+            {userInfo.role === 'admin' && (
+                <>
+                    <button onClick={handleEditToggle}>
+                        {isEditing ? 'Cancel' : 'Edit'}
+                    </button>
+                    <button onClick={handleDelete}>Delete</button>
+                </>
             )}
         </div>
     );
