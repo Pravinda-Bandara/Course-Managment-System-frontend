@@ -1,18 +1,19 @@
+import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import InputFieldComponent from "../components/InputFieldComponent.jsx";
-import {loginValidationUtil} from "../utils/UserValidationUtil.js";
+import { loginValidationUtil } from "../utils/UserValidationUtil.js";
 import { Store } from "../Store.jsx";
-import { useLoginMutation } from "../hooks/userHooks.js";
+
 import { getError } from "../utils/ErrorUtil.js";
+import {login} from "../hooks/userHooks.js";
 
 export function LoginPage() {
     const navigate = useNavigate();
-    const redirect = '/enrollment';
-    const { mutateAsync: login, isPending } = useLoginMutation();
+    const redirect = '/courses';
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [isPending, setIsPending] = useState(false);
 
     const { state, dispatch } = useContext(Store);
     const { userInfo } = state;
@@ -22,18 +23,16 @@ export function LoginPage() {
         if (!loginValidationUtil(email, password)) {
             return;
         }
+        setIsPending(true);
         try {
-            const data = await login({
-                email,
-                password,
-            });
-            navigate('/enrollment');
+            const data = await login({ email, password });
+            navigate(redirect);
             dispatch({ type: 'USER_SIGNIN', payload: data });
             localStorage.setItem('userInfo', JSON.stringify(data));
         } catch (err) {
-            toast.error(getError(err), {
-                autoClose: 1000,
-            });
+            toast.error(getError(err), { autoClose: 1000 });
+        } finally {
+            setIsPending(false);
         }
     };
 
@@ -41,7 +40,7 @@ export function LoginPage() {
         if (userInfo) {
             navigate(redirect);
         }
-    }, [userInfo]);
+    }, [userInfo, navigate, redirect]);
 
     return (
         <div className="flex justify-evenly items-center h-screen bg-fixed-cover-2 bg-black">

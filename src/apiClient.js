@@ -12,6 +12,7 @@ apiClient.interceptors.request.use(
     async (config) => {
         if (localStorage.getItem('userInfo')) {
             const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+            console.log(userInfo.token)
             config.headers.authorization = `Bearer ${userInfo.token}`;
         }
         return config;

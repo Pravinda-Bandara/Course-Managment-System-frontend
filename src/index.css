@@ -25,3 +25,7 @@
         @apply w-24 text-center m-2
     }
 }
+
+:root{
+    font-size: 1.3rem;
+}

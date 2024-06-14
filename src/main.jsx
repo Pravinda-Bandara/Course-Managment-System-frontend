@@ -7,9 +7,17 @@ import {createBrowserRouter, createRoutesFromElements, Route, RouterProvider} fr
 import {LoginPage} from "./pages/LoginPage.jsx";
 import {RegisterPage} from "./pages/RegisterPage.jsx";
 import {StudentEnrollmentPage} from "./pages/StudentEnrollmentPage.jsx";
-import {CoursesPage} from "./pages/CoursesPage.jsx";
-import {StudentsPage} from "./pages/StudentsPage.jsx";
+
+
 import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
+import CoursesPage from "./pages/CoursesPage.jsx";
+import CourseDetailsPage1 from "./pages/CourseDetailsPage1.jsx";
+import UsersPage from "./pages/UsersPage.jsx";
+import {UserDetailsPage} from "./pages/UserDetailsPage.jsx";
+
+
+
+
 
 const queryClient = new QueryClient();
 
@@ -20,8 +28,15 @@ const router = createBrowserRouter(
             <Route path="login" element={<LoginPage/>}/>
             <Route path="register" element={<RegisterPage/>}/>
             <Route path="enrollment" element={<StudentEnrollmentPage/>}/>
-            <Route path="admin/courses" element={<CoursesPage/>}/>
-            <Route path="admin/students" element={<StudentsPage/>}/>
+            <Route path="courses" element={<CoursesPage/>}/>
+            {/*<Route path="courses/:id" element={<CourseDetailsPage1 />} />*/}
+            <Route path="admin/users/:studentId" element={<UserDetailsPage/>}/>
+            <Route
+                path="courses/:studentId/:courseId"
+                element={<CourseDetailsPage1 />}
+            />
+            <Route path="admin/users" element={<UsersPage/>}/>
+
         </Route>
     )
 );

@@ -1,30 +1,25 @@
-import {useContext, useEffect, useState} from "react";
-import {Store} from "../Store.jsx";
-import {useNavigate} from "react-router-dom";
-import {useRegisterMutation} from "../hooks/userHooks.js";
-import {toast} from "react-toastify";
-import {registerUserValidationUtil} from "../utils/UserValidationUtil.js";
-import {getError} from "../utils/ErrorUtil.js";
-import InputFieldComponent from "../components/InputFieldComponent.jsx";
-
+import React, { useContext, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import apiClient from '../apiClient';
+import { toast } from 'react-toastify';
+import InputFieldComponent from '../components/InputFieldComponent.jsx';
+import { Store } from '../Store.jsx';
 
 export function RegisterPage() {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [number, setNumber] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
 
     const { state, dispatch } = useContext(Store);
     const { userInfo } = state;
     const navigate = useNavigate();
-    const redirect = '/enrollment';
-    const { mutateAsync: register, isPending } = useRegisterMutation();
+    const redirect = '/courses';
 
     const handleRegister = async (event) => {
         event.preventDefault();
-        if (!registerUserValidationUtil(name, email, password)) {
-            return;
-        }
+
         if (password !== confirmPassword) {
             toast.error('Passwords do not match.', {
                 autoClose: 1000
@@ -33,12 +28,14 @@ export function RegisterPage() {
         }
 
         try {
-            const data = await register({
+            const data = await registerUser({
                 name,
                 email,
-                password
+                password,
+                number
             });
-            navigate('/enrollment');
+
+            navigate('/courses');
             dispatch({ type: 'USER_SIGNIN', payload: data });
             localStorage.setItem('userInfo', JSON.stringify(data));
         } catch (err) {
@@ -53,6 +50,15 @@ export function RegisterPage() {
             navigate(redirect);
         }
     }, [userInfo]);
+
+    const registerUser = async ({ name, email, password, number }) => {
+        try {
+            const response = await apiClient.post('api/users/signup', { name, email, password, number });
+            return response.data;
+        } catch (error) {
+            throw new Error(error.response?.data?.message || 'Error registering');
+        }
+    };
 
     return (
         <div className="flex justify-evenly items-center h-screen bg-fixed-cover-2 bg-black">
@@ -77,6 +83,14 @@ export function RegisterPage() {
                     </div>
                     <div>
                         <InputFieldComponent
+                            type="text"
+                            placeholder="Number"
+                            value={number}
+                            onChange={(e) => setNumber(e.target.value)}
+                        />
+                    </div>
+                    <div>
+                        <InputFieldComponent
                             type="password"
                             placeholder="Create password"
                             value={password}
@@ -93,7 +107,7 @@ export function RegisterPage() {
                     </div>
 
                     <div>
-                        <button type="submit" disabled={isPending} className="custom-button w-2/5">
+                        <button type="submit" className="custom-button w-2/5">
                             Register
                         </button>
                     </div>
