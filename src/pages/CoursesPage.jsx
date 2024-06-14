@@ -33,7 +33,7 @@ const CoursesPage = () => {
                 const enrollments = await getEnrollmentsByStudentId(userInfo._id);
                 setEnrolledCourses(enrollments);
             } catch (error) {
-                setError(error.message || 'Error fetching enrollments');
+                setEnrolledCourses([{courseName:'not yet Enrolled',enrollmentId:'0'}])
             } finally {
                 setIsLoading(false);
             }
@@ -95,14 +95,12 @@ const CoursesPage = () => {
                 <thead>
                 <tr>
                     <th>Course Name</th>
-                    <th>Student Email</th>
                 </tr>
                 </thead>
                 <tbody>
                 {enrolledCourses.map((enrollment) => (
                     <tr key={enrollment.enrollmentId}>
                         <td>{enrollment.courseName}</td>
-                        <td>{enrollment.studentEmail}</td>
                     </tr>
                 ))}
                 </tbody>

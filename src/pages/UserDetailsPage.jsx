@@ -44,9 +44,10 @@ export function UserDetailsPage() {
             try {
                 const enrollments = await getEnrollmentsByStudentId(studentId);
                 setEnrolledCourses(enrollments);
+                console.log(enrollments)
             } catch (error) {
+                setEnrolledCourses([{courseName:'not yet Enrolled',enrollmentId:'0'}])
 
-                setError(error.message || 'Error fetching enrollments');
             } finally {
                 setIsLoading(false);
             }
@@ -119,14 +120,12 @@ export function UserDetailsPage() {
                 <thead>
                 <tr>
                     <th>Course Name</th>
-                    <th>Student Email</th>
                 </tr>
                 </thead>
                 <tbody>
                 {enrolledCourses.map((enrollment) => (
                     <tr key={enrollment.enrollmentId}>
                         <td>{enrollment.courseName}</td>
-                        <td>{enrollment.studentEmail}</td>
                     </tr>
                 ))}
                 </tbody>
