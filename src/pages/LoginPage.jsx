@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import InputFieldComponent from "../components/InputFieldComponent.jsx";
@@ -43,46 +43,48 @@ export function LoginPage() {
     }, [userInfo, navigate, redirect]);
 
     return (
-        <div className="flex justify-evenly items-center h-screen bg-fixed-cover-2 bg-black">
-            <div className="p-10">
-                <h1 className="text-5xl font-bold text-white mb-4">Hi there,</h1>
-                <p className="text-white text-2xl mb-10">
+        <div className="flex justify-center items-center h-screen bg-gray-800">
+            <div className="bg-white p-8 rounded-lg shadow-lg">
+                <h1 className="text-3xl font-bold text-gray-900 mb-4">Hi there!</h1>
+                <p className="text-gray-700 mb-6">
                     Welcome to our <br /> Courses Management System
                 </p>
                 <form onSubmit={handleLogin}>
-                    <div>
+                    <div className="mb-4">
                         <InputFieldComponent
                             type="text"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
-                            placeholder="e-mail"
+                            placeholder="E-mail"
+                            className="w-full px-4 py-2 border rounded-md"
                         />
                     </div>
-                    <div>
+                    <div className="mb-4">
                         <InputFieldComponent
                             type="password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
-                            placeholder="password"
+                            placeholder="Password"
+                            className="w-full px-4 py-2 border rounded-md"
                         />
                     </div>
 
-                    <button type="submit" disabled={isPending} className="custom-button w-1/4">
+                    <button
+                        type="submit"
+                        disabled={isPending}
+                        className="bg-blue-500 text-white px-4 py-2 rounded-md w-full  hover:bg-blue-700"
+                    >
                         Login
                     </button>
-                    <span className="text-white mx-5"> or </span>
+                    <span className="text-gray-700 mx-4">or</span>
                     <button
-                        className="underline text-white text-lg mr-7"
+                        className="text-blue-500 underline"
                         type="button"
                         onClick={() => navigate('/register')}
                     >
                         Click here to Register
                     </button>
                 </form>
-            </div>
-            <div className="flex items-center">
-                {/*<Logo textColor="text-black" imageSize="w-20" textSize="text-5xl" />*/}
-                <h1>Logo</h1>
             </div>
         </div>
     );

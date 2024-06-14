@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 const DeletePopUp = ({ message, onConfirm, onCancel }) => {
     const [isVisible, setIsVisible] = useState(true);

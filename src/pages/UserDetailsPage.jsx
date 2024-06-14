@@ -1,14 +1,16 @@
-import React, { useState, useEffect, useContext } from 'react';
-import {useNavigate, useParams} from "react-router-dom";
-import apiClient from '../apiClient';
-import { getEnrollmentsByStudentId } from '../hooks/enrollmentHooks.js';
-import { Store } from "../Store.jsx";
+import { useState, useEffect, useContext } from 'react';
+import { useNavigate, useParams } from "react-router-dom";
 
-import {getUserById, getUsers} from "../hooks/userHooks.js";
+import { getDetailedEnrollments, getEnrollmentsByStudentId } from '../hooks/enrollmentHooks.js';
+import { Store } from "../Store.jsx";
+import { getUserById } from "../hooks/userHooks.js";
+import TableHeader from "../components/TableHeader.jsx";
+import TableRow from "../components/TableRow.jsx";
+
 
 export function UserDetailsPage() {
     const { studentId } = useParams();
-    const navigate=useNavigate()
+    const navigate = useNavigate()
     const [user, setUser] = useState(null);
     const [courses, setCourses] = useState([]);
     const [enrolledCourses, setEnrolledCourses] = useState([]);
@@ -31,8 +33,8 @@ export function UserDetailsPage() {
 
         const fetchCourses = async () => {
             try {
-                const response = await apiClient.get('api/courses/');
-                setCourses(response.data);
+                const response = await getDetailedEnrollments(studentId);
+                setCourses(response);
             } catch (error) {
                 setError(error.message || 'Error fetching courses');
             } finally {
@@ -46,7 +48,7 @@ export function UserDetailsPage() {
                 setEnrolledCourses(enrollments);
                 console.log(enrollments)
             } catch (error) {
-                setEnrolledCourses([{courseName:'not yet Enrolled',enrollmentId:'0'}])
+                setEnrolledCourses([{ courseName: 'not yet Enrolled', enrollmentId: '0' }])
 
             } finally {
                 setIsLoading(false);
@@ -63,8 +65,6 @@ export function UserDetailsPage() {
     const handleDetailsClick = (courseId) => {
         navigate(`/courses/${studentId}/${courseId}`);
     };
-
-
 
     if (isLoading) return <div className="text-center py-4">Loading...</div>;
     if (error) return <div className="text-center py-4 text-red-500">Error: {error}</div>;
@@ -86,31 +86,17 @@ export function UserDetailsPage() {
             <div className="flex gap-40">
                 <div className="w-3/5">
                     <table className="min-w-full bg-white border">
-                        <thead className="bg-gray-200">
-                        <tr>
-                            <th className="px-4 py-2 border">Name</th>
-                            <th className="px-4 py-2 border">Duration</th>
-                            <th className="px-4 py-2 border">Instructor</th>
-                            <th className="px-4 py-2 border">Instructor Number</th>
-                            <th className="px-4 py-2 border">Action</th>
-                        </tr>
-                        </thead>
+                        <TableHeader columns={['Name', 'Duration', 'Instructor', 'Instructor Number', 'Enrolled', 'Action']} />
                         <tbody>
                         {courses.map((course) => (
-                            <tr key={course._id} className="hover:bg-gray-100">
-                                <td className="px-4 py-2 border">{course.title}</td>
-                                <td className="px-4 py-2 border">{course.duration}</td>
-                                <td className="px-4 py-2 border">{course.instructor}</td>
-                                <td className="px-4 py-2 border">{course.instructor_num}</td>
-                                <td className="px-4 py-2 border">
-                                    <button
-                                        onClick={() => handleDetailsClick(course._id)}
-                                        className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700"
-                                    >
-                                        Details
-                                    </button>
-                                </td>
-                            </tr>
+                            <TableRow key={course._id} rowData={[course.title, course.duration, course.instructor, course.instructor_num, course.enrolled ? 'Yes' : 'No', (
+                                <button
+                                    onClick={() => handleDetailsClick(course._id)}
+                                    className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700"
+                                >
+                                    Details
+                                </button>
+                            )]} />
                         ))}
                         </tbody>
                     </table>
@@ -119,16 +105,10 @@ export function UserDetailsPage() {
                 <div className="w-2/5">
                     <h1 className="text-3xl font-bold mb-4">Enrolled Courses</h1>
                     <table className="min-w-full bg-white border">
-                        <thead className="bg-gray-200">
-                        <tr>
-                            <th className="px-4 py-2 border">Course Name</th>
-                        </tr>
-                        </thead>
+                        <TableHeader columns={['Course Name']} />
                         <tbody>
                         {enrolledCourses.map((enrollment) => (
-                            <tr key={enrollment.enrollmentId} className="hover:bg-gray-100">
-                                <td className="px-4 py-2 border">{enrollment.courseName}</td>
-                            </tr>
+                            <TableRow key={enrollment.enrollmentId} rowData={[enrollment.courseName]} />
                         ))}
                         </tbody>
                     </table>

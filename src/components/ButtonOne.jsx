@@ -1,4 +1,3 @@
-import React from 'react';
 
 const ButtonOne = ({ isBlack, text }) => {
     const backgroundColor = isBlack ? 'bg-black text-white' : 'bg-white text-black';

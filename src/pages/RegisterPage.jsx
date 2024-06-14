@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import apiClient from '../apiClient';
 import { toast } from 'react-toastify';
@@ -61,67 +61,69 @@ export function RegisterPage() {
     };
 
     return (
-        <div className="flex justify-evenly items-center h-screen bg-fixed-cover-2 bg-black">
-            <div className="p-10">
-                <h1 className="font-bold text-5xl my-5 my-10 text-white">Register Now!</h1>
+        <div className="flex justify-center items-center h-screen bg-gray-800">
+            <div className="bg-white p-8 rounded-lg shadow-lg">
+                <h1 className="text-3xl font-bold text-gray-900 mb-4">Register Now!</h1>
                 <form onSubmit={handleRegister}>
-                    <div>
+                    <div className="mb-4">
                         <InputFieldComponent
                             type="text"
                             placeholder="Name"
                             value={name}
                             onChange={(e) => setName(e.target.value)}
+                            className="w-full px-4 py-2 border rounded-md"
                         />
                     </div>
-                    <div>
+                    <div className="mb-4">
                         <InputFieldComponent
                             type="email"
                             placeholder="E-mail"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
+                            className="w-full px-4 py-2 border rounded-md"
                         />
                     </div>
-                    <div>
+                    <div className="mb-4">
                         <InputFieldComponent
                             type="text"
                             placeholder="Number"
                             value={number}
                             onChange={(e) => setNumber(e.target.value)}
+                            className="w-full px-4 py-2 border rounded-md"
                         />
                     </div>
-                    <div>
+                    <div className="mb-4">
                         <InputFieldComponent
                             type="password"
                             placeholder="Create password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
+                            className="w-full px-4 py-2 border rounded-md"
                         />
                     </div>
-                    <div>
+                    <div className="mb-4">
                         <InputFieldComponent
                             type="password"
                             placeholder="Confirm password"
                             value={confirmPassword}
                             onChange={(e) => setConfirmPassword(e.target.value)}
+                            className="w-full px-4 py-2 border rounded-md"
                         />
                     </div>
 
-                    <div>
-                        <button type="submit" className="custom-button w-2/5">
+                    <div className="flex justify-between items-center">
+                        <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-700">
                             Register
+                        </button>
+                        <button
+                            type="button"
+                            className="text-blue-500 underline"
+                            onClick={() => navigate('/login')}
+                        >
+                            &lt; Back To Login
                         </button>
                     </div>
                 </form>
-
-                <div>
-                    <button className="underline text-white text-lg" type="button" onClick={() => navigate('/login')}>
-                        &lt; Back To Login
-                    </button>
-                </div>
-            </div>
-
-            <div className="flex items-center">
-                <h1>Logo</h1>
             </div>
         </div>
     );

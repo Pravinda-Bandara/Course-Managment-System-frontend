@@ -1,4 +1,3 @@
-import React from 'react';
 
 const InputFieldComponent = ({ type, placeholder, value, onChange }) => {
     return (

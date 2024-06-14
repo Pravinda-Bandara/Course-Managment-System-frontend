@@ -120,7 +120,7 @@ const CourseDetailsPage = () => {
                                 className="w-full px-3 py-2 border border-gray-300 rounded"
                             />
                             <input
-                                type="number"
+                                type="text"
                                 name="duration"
                                 value={courseData.duration}
                                 onChange={handleInputChange}
@@ -190,6 +190,12 @@ const CourseDetailsPage = () => {
                     </button>
                 </div>
             )}
+            <button
+                onClick={()=>{navigate(`/admin/users/${studentId}`)}}
+                className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700 mb-4 float-end"
+            >
+                Back to User Profile
+            </button>
         </div>
     );
 };
