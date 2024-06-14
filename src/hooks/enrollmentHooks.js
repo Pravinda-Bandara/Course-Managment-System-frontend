@@ -33,6 +33,14 @@ export const getEnrollmentStatus = async (studentId, courseId) => {
     }
 };
 
+export const getDetailedEnrollments = async (studentId) => {
+    try {
+        const response = await apiClient.get(`api/enrollments/detailed/${studentId}`);
+        return response.data;
+    } catch (error) {
+        throw new Error(error.response?.data?.message || 'Error fetching detailed enrollments');
+    }
+};
 
 
 export const enrollInCourse = async (studentId, courseId) => {

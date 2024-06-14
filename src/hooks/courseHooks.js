@@ -37,3 +37,11 @@ export const updateCourse = async (courseId, courseData) => {
     }
 };
 
+export const postCourse = async (courseData) => {
+    try {
+        const response = await apiClient.post('api/courses/', courseData);
+        return response.data;
+    } catch (error) {
+        throw new Error(error.response?.data?.message || 'Error creating course');
+    }
+};
