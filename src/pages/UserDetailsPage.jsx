@@ -64,72 +64,76 @@ export function UserDetailsPage() {
         navigate(`/courses/${studentId}/${courseId}`);
     };
 
-    const handleFetchUsers = async () => {
-        try {
-            const users = await getUsers();
-            console.log('Users:', users);
-        } catch (error) {
-            console.error('Error fetching users:', error);
-        }
-    };
 
-    if (isLoading) return <div>Loading...</div>;
-    if (error) return <div>Error: {error}</div>;
+
+    if (isLoading) return <div className="text-center py-4">Loading...</div>;
+    if (error) return <div className="text-center py-4 text-red-500">Error: {error}</div>;
 
     return (
-        <div>
-            <h1>User Details</h1>
+        <div className="container mx-auto px-4 py-6">
+            <h1 className="text-3xl font-bold mb-6">User Details</h1>
             {user && (
-                <div>
-                    <p>User ID: {user._id}</p>
-                    <p>Email: {user.email}</p>
-                    <p>Name: {user.name}</p>
-                    <p>Role: {user.role}</p>
+                <div className="mb-6">
+                    <p><span className="font-bold">User ID:</span> {user._id}</p>
+                    <p><span className="font-bold">Email:</span> {user.email}</p>
+                    <p><span className="font-bold">Name:</span> {user.name}</p>
+                    <p><span className="font-bold">Role:</span> {user.role}</p>
                 </div>
             )}
 
-            <h1>Courses</h1>
-            <button onClick={handleFetchUsers}>Fetch Users</button>
-            <table>
-                <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Duration</th>
-                    <th>Instructor</th>
-                    <th>Instructor Number</th>
-                    <th>Action</th>
-                </tr>
-                </thead>
-                <tbody>
-                {courses.map((course) => (
-                    <tr key={course._id}>
-                        <td>{course.title}</td>
-                        <td>{course.duration}</td>
-                        <td>{course.instructor}</td>
-                        <td>{course.instructor_num}</td>
-                        <td>
-                            <button onClick={() => handleDetailsClick(course._id)}>Details</button>
-                        </td>
-                    </tr>
-                ))}
-                </tbody>
-            </table>
+            <h1 className="text-3xl font-bold mb-4">Courses</h1>
 
-            <h1>Enrolled Courses</h1>
-            <table>
-                <thead>
-                <tr>
-                    <th>Course Name</th>
-                </tr>
-                </thead>
-                <tbody>
-                {enrolledCourses.map((enrollment) => (
-                    <tr key={enrollment.enrollmentId}>
-                        <td>{enrollment.courseName}</td>
-                    </tr>
-                ))}
-                </tbody>
-            </table>
+            <div className="flex gap-40">
+                <div className="w-3/5">
+                    <table className="min-w-full bg-white border">
+                        <thead className="bg-gray-200">
+                        <tr>
+                            <th className="px-4 py-2 border">Name</th>
+                            <th className="px-4 py-2 border">Duration</th>
+                            <th className="px-4 py-2 border">Instructor</th>
+                            <th className="px-4 py-2 border">Instructor Number</th>
+                            <th className="px-4 py-2 border">Action</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {courses.map((course) => (
+                            <tr key={course._id} className="hover:bg-gray-100">
+                                <td className="px-4 py-2 border">{course.title}</td>
+                                <td className="px-4 py-2 border">{course.duration}</td>
+                                <td className="px-4 py-2 border">{course.instructor}</td>
+                                <td className="px-4 py-2 border">{course.instructor_num}</td>
+                                <td className="px-4 py-2 border">
+                                    <button
+                                        onClick={() => handleDetailsClick(course._id)}
+                                        className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700"
+                                    >
+                                        Details
+                                    </button>
+                                </td>
+                            </tr>
+                        ))}
+                        </tbody>
+                    </table>
+                </div>
+
+                <div className="w-2/5">
+                    <h1 className="text-3xl font-bold mb-4">Enrolled Courses</h1>
+                    <table className="min-w-full bg-white border">
+                        <thead className="bg-gray-200">
+                        <tr>
+                            <th className="px-4 py-2 border">Course Name</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {enrolledCourses.map((enrollment) => (
+                            <tr key={enrollment.enrollmentId} className="hover:bg-gray-100">
+                                <td className="px-4 py-2 border">{enrollment.courseName}</td>
+                            </tr>
+                        ))}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     );
 }

@@ -69,104 +69,121 @@ function UsersPage() {
         setEditedUserData({ name: '', email: '', role: '', number: '' });
     };
 
-    const handleLogOut = () => {
-        dispatch({ type: 'USER_SIGNOUT' });
-        localStorage.removeItem('userInfo');
-        navigate(redirect);
-    };
 
     return (
-        <div>
-            <div>
-                <div>
-                    <div>
-                        <h1>Users</h1>
-                        <button type="button" onClick={() => navigate(addNewUser)}>
-                            Add new user
-                        </button>
-                    </div>
-                    <div>
-                        {isLoading ? (
-                            <div>Loading...</div>
-                        ) : error ? (
-                            <div>Error: {error}</div>
-                        ) : (
-                            <table>
-                                <thead>
-                                <tr>
-                                    <th>Name</th>
-                                    <th>Email</th>
-                                    <th>Role</th>
-                                    <th>Number</th>
-                                    <th>Actions</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                {users.map((user) => (
-                                    <tr key={user._id}>
-                                        {editingUserId === user._id ? (
-                                            <>
-                                                <td>
-                                                    <input
-                                                        onChange={(e) => setEditedUserData({ ...editedUserData, name: e.target.value })}
-                                                        value={editedUserData.name}
-                                                        type="text"
-                                                    />
-                                                </td>
-                                                <td>
-                                                    <input
-                                                        onChange={(e) => setEditedUserData({ ...editedUserData, email: e.target.value })}
-                                                        value={editedUserData.email}
-                                                        type="text"
-                                                    />
-                                                </td>
-                                                <td>
-                                                    <input
-                                                        onChange={(e) => setEditedUserData({ ...editedUserData, role: e.target.value })}
-                                                        value={editedUserData.role}
-                                                        type="text"
-                                                    />
-                                                </td>
-                                                <td>
-                                                    <input
-                                                        onChange={(e) => setEditedUserData({ ...editedUserData, number: e.target.value })}
-                                                        value={editedUserData.number}
-                                                        type="text"
-                                                    />
-                                                </td>
-                                                <td>
-                                                    <button onClick={handleSaveEdit}>Save</button>
-                                                    <button onClick={handleCancelEdit}>Cancel</button>
-                                                </td>
-                                            </>
-                                        ) : (
-                                            <>
-                                                <td><input disabled value={user.name} type="text" /></td>
-                                                <td><input disabled value={user.email} type="text" /></td>
-                                                <td><input disabled value={user.role} type="text" /></td>
-                                                <td><input disabled value={user.number} type="text" /></td>
-                                                <td>
-                                                    <button onClick={() => handleEdit(user)}>Edit</button>
-                                                    <button onClick={() => handleDelete(user._id, user.name)}>Delete</button>
-                                                    <button onClick={() => navigate(`/admin/users/${user._id}`)}>Details</button>
-                                                </td>
-                                            </>
-                                        )}
-                                    </tr>
-                                ))}
-                                </tbody>
-                            </table>
-                        )}
-                    </div>
-                </div>
+        <div className="container mx-auto px-4 py-6">
+            <div className="flex justify-between items-center mb-6">
+                <h1 className="text-3xl font-bold">Users</h1>
+
+                <button
+                    type="button"
+                    onClick={() => navigate(addNewUser)}
+                    className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-900"
+                >
+                    Add New User
+                </button>
             </div>
-            <div>
-                <div>
-                    <i></i>
-                    <button type="button" onClick={handleLogOut}>
-                        LogOut
-                    </button>
-                </div>
+            <div className="overflow-x-auto bg-white shadow-md rounded mb-6">
+                {isLoading ? (
+                    <div className="text-center py-4">Loading...</div>
+                ) : error ? (
+                    <div className="text-center py-4 text-red-500">Error: {error}</div>
+                ) : (
+                    <table className="min-w-full bg-white">
+                        <thead className="bg-gray-200">
+                        <tr>
+                            <th className="px-4 py-2 border">Name</th>
+                            <th className="px-4 py-2 border">Email</th>
+                            <th className="px-4 py-2 border">Role</th>
+                            <th className="px-4 py-2 border">Number</th>
+                            <th className="px-4 py-2 border">Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {users.map((user) => (
+                            <tr key={user._id} className="hover:bg-gray-100">
+                                {editingUserId === user._id ? (
+                                    <>
+                                        <td className="px-4 py-2 border">
+                                            <input
+                                                onChange={(e) => setEditedUserData({ ...editedUserData, name: e.target.value })}
+                                                value={editedUserData.name}
+                                                type="text"
+                                                className="w-full px-2 py-1 border rounded"
+                                            />
+                                        </td>
+                                        <td className="px-4 py-2 border">
+                                            <input
+                                                onChange={(e) => setEditedUserData({ ...editedUserData, email: e.target.value })}
+                                                value={editedUserData.email}
+                                                type="text"
+                                                className="w-full px-2 py-1 border rounded"
+                                            />
+                                        </td>
+                                        <td className="px-4 py-2 border">
+                                            <input
+                                                onChange={(e) => setEditedUserData({ ...editedUserData, role: e.target.value })}
+                                                value={editedUserData.role}
+                                                type="text"
+                                                className="w-full px-2 py-1 border rounded"
+                                            />
+                                        </td>
+                                        <td className="px-4 py-2 border">
+                                            <input
+                                                onChange={(e) => setEditedUserData({ ...editedUserData, number: e.target.value })}
+                                                value={editedUserData.number}
+                                                type="text"
+                                                className="w-full px-2 py-1 border rounded"
+                                            />
+                                        </td>
+                                        <td className="px-4 py-2 border">
+                                            <button
+                                                onClick={handleSaveEdit}
+                                                className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700 mr-2"
+                                            >
+                                                Save
+                                            </button>
+                                            <button
+                                                onClick={handleCancelEdit}
+                                                className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-700"
+                                            >
+                                                Cancel
+                                            </button>
+                                        </td>
+                                    </>
+                                ) : (
+                                    <>
+                                        <td className="px-4 py-2 border">{user.name}</td>
+                                        <td className="px-4 py-2 border">{user.email}</td>
+                                        <td className="px-4 py-2 border">{user.role}</td>
+                                        <td className="px-4 py-2 border">{user.number}</td>
+                                        <td className="px-4 py-2 border">
+                                            <button
+                                                onClick={() => handleEdit(user)}
+                                                className="px-4 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-700 mr-2"
+                                            >
+                                                Edit
+                                            </button>
+                                            <button
+                                                onClick={() => handleDelete(user._id, user.name)}
+                                                className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-700 mr-2"
+                                            >
+                                                Delete
+                                            </button>
+                                            <button
+                                                onClick={() => navigate(`/admin/users/${user._id}`)}
+                                                className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700"
+                                            >
+                                                Details
+                                            </button>
+                                        </td>
+                                    </>
+                                )}
+                            </tr>
+                        ))}
+                        </tbody>
+                    </table>
+                )}
             </div>
         </div>
     );

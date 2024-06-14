@@ -47,7 +47,7 @@ export function LoginPage() {
             <div className="p-10">
                 <h1 className="text-5xl font-bold text-white mb-4">Hi there,</h1>
                 <p className="text-white text-2xl mb-10">
-                    Welcome to our <br /> contacts portal
+                    Welcome to our <br /> Courses Management System
                 </p>
                 <form onSubmit={handleLogin}>
                     <div>
