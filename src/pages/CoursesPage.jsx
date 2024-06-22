@@ -84,6 +84,7 @@ const CoursesPage = () => {
                                         >
                                             Details
                                         </button>
+
                                     ]}
                                 />
                             ))}
