@@ -37,7 +37,7 @@ export const updateCourse = async (courseId, courseData) => {
     }
 };
 
-export const postCourse = async (courseData) => {
+export const addCourse = async (courseData) => {
     try {
         const response = await apiClient.post('api/courses/', courseData);
         return response.data;

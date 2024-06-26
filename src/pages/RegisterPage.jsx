@@ -4,6 +4,8 @@ import apiClient from '../apiClient';
 import { toast } from 'react-toastify';
 import InputFieldComponent from '../components/InputFieldComponent.jsx';
 import { Store } from '../Store.jsx';
+import {registerUserValidationUtil} from "../utils/UserValidationUtil.js";
+import {getError} from "../utils/ErrorUtil.js";
 
 export function RegisterPage() {
     const [name, setName] = useState('');
@@ -20,12 +22,10 @@ export function RegisterPage() {
     const handleRegister = async (event) => {
         event.preventDefault();
 
-        if (password !== confirmPassword) {
-            toast.error('Passwords do not match.', {
-                autoClose: 1000
-            });
+        if (!registerUserValidationUtil(name, email,number, password, confirmPassword)) {
             return;
         }
+
 
         try {
             const data = await registerUser({
@@ -76,7 +76,7 @@ export function RegisterPage() {
                     </div>
                     <div className="mb-4">
                         <InputFieldComponent
-                            type="email"
+                            type="text"
                             placeholder="E-mail"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
