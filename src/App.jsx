@@ -5,6 +5,7 @@ import NavBar from "./components/NavBar.jsx";
 import {Store} from "./Store.jsx";
 import {useContext, useEffect} from "react";
 import {setupInterceptors} from "./apiClient.js";
+import Footer from "./components/Footer.jsx";
 
 
 function App() {
@@ -12,16 +13,26 @@ function App() {
 
     const { state } = useContext(Store);
     const navigate = useNavigate();
+    const { userInfo } = state;
 // Set up interceptors when the component mounts
     useEffect(() => {
         setupInterceptors(navigate);
     }, [navigate]);
     return (
-        <>{state.userInfo && <NavBar />}
-
-            <ToastContainer />
-            <Outlet />
-        </>
+        <div
+            className="min-h-screen relative bg-Background"
+        >
+            <div className="absolute inset-0 bg-black bg-opacity-20 backdrop-blur-sm"></div>
+            {/* Overlay for opacity and blur */}
+            <div className="min-h-screen flex flex-col relative">
+                {userInfo && <NavBar/>}
+                <main className="flex-grow">
+                    <ToastContainer/>
+                    <Outlet/>
+                </main>
+                {userInfo && <Footer/>}
+            </div>
+        </div>
     );
 }
 

@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Playwrite+DE+Grund:wght@100..400&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -27,8 +28,17 @@
 }
 
 :root{
-    font-size: 1.3rem;
+    font-size: 0.8rem;
+    font-family: "Playwrite DE Grund", cursive;
+    font-optical-sizing: auto;
+    font-style: normal;
 }
 td{
     text-align: center;
+}
+.bg-Background {
+    background-image: url('./assets/Background.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
 }

@@ -20,10 +20,6 @@ import ProtectedRoute from "./routeGuards /ProtectedRoute.jsx";
 
 
 
-
-
-
-
 const queryClient = new QueryClient();
 
 const router = createBrowserRouter(

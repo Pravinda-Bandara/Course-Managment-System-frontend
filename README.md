@@ -33,6 +33,7 @@ Welcome to our Course Management System! This platform allows visitors to regist
   <img src="./screenshots/admin2.png" alt="Admin Screenshot 3" >
   <img src="./screenshots/admin3.png" alt="Admin Screenshot 4" >
     <img src="./screenshots/admin1.png" alt="Admin Screenshot 2" >
+<img src="./screenshots/admin4.png" alt="Admin Screenshot 2" >
 </div>
 
 ### Frontend Technologies Used

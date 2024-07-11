@@ -15,7 +15,7 @@ const NavBar = () => {
     };
 
     return (
-        <nav className="bg-blue-600 p-4 flex justify-between items-center px-20">
+        <nav className="bg-gray-800 p-4 flex justify-between items-center px-36 ">
             <ul className="flex space-x-4">
                 <li>
                     <Link to="/courses" className="text-white hover:text-gray-300">Courses</Link>

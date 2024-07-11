@@ -7,10 +7,7 @@ import { deleteUser, getUsers, updateUser } from "../hooks/userHooks.js";
 function UsersPage() {
     const navigate = useNavigate();
     const redirect = '/login';
-    const addNewUser = '/adduser';
     const { state } = useContext(Store);
-    const { userInfo } = state;
-
     const [users, setUsers] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -75,15 +72,15 @@ function UsersPage() {
             <div className="flex justify-between items-center mb-6">
                 <h1 className="text-3xl font-bold">Users</h1>
 
-                {userInfo && <button
+                {/*{userInfo && <button
                     type="button"
                     onClick={() => navigate(addNewUser)}
                     className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-900"
                 >
                     Add New User
-                </button>}
+                </button>}*/}
             </div>
-            <div className="overflow-x-auto bg-white shadow-md rounded mb-6">
+            <div className="overflow-x-auto bg-white shadow-md rounded mb-6 rounded-2xl  opacity-80">
                 {isLoading ? (
                     <div className="text-center py-4">Loading...</div>
                 ) : error ? (
@@ -92,11 +89,11 @@ function UsersPage() {
                     <table className="min-w-full bg-white">
                         <thead className="bg-gray-200">
                         <tr>
-                            <th className="px-4 py-2 border">Name</th>
-                            <th className="px-4 py-2 border">Email</th>
-                            <th className="px-4 py-2 border">Role</th>
-                            <th className="px-4 py-2 border">Number</th>
-                            <th className="px-4 py-2 border">Actions</th>
+                            <th className="px-4 py-2 ">Name</th>
+                            <th className="px-4 py-2 ">Email</th>
+                            <th className="px-4 py-2 ">Role</th>
+                            <th className="px-4 py-2 ">Number</th>
+                            <th className="px-4 py-2 ">Actions</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -109,7 +106,7 @@ function UsersPage() {
                                                 onChange={(e) => setEditedUserData({ ...editedUserData, name: e.target.value })}
                                                 value={editedUserData.name}
                                                 type="text"
-                                                className="w-44 px-1 py-1 border rounded"
+                                                className="w-44 px-1 py-1  rounded"
                                             />
                                         </td>
                                         <td className="px-4 py-2 border">
@@ -117,7 +114,7 @@ function UsersPage() {
                                                 onChange={(e) => setEditedUserData({ ...editedUserData, email: e.target.value })}
                                                 value={editedUserData.email}
                                                 type="text"
-                                                className="w-full px-1 py-1 border rounded"
+                                                className="w-full px-1 py-1  rounded"
                                             />
                                         </td>
                                         <td className="px-4 py-2 border">
@@ -125,18 +122,18 @@ function UsersPage() {
                                                 onChange={(e) => setEditedUserData({ ...editedUserData, role: e.target.value })}
                                                 value={editedUserData.role}
                                                 type="text"
-                                                className="w-20 px-1 py-1 border rounded"
+                                                className="w-20 px-1 py-1  rounded"
                                             />
                                         </td>
-                                        <td className="px-4 py-1 border">
+                                        <td className="px-4 py-1 ">
                                             <input
                                                 onChange={(e) => setEditedUserData({ ...editedUserData, number: e.target.value })}
                                                 value={editedUserData.number}
                                                 type="text"
-                                                className="w-28 px-1 py-1 border rounded"
+                                                className="w-28 px-1 py-1  rounded"
                                             />
                                         </td>
-                                        <td className="px-4 py-2 border">
+                                        <td className="px-4 py-2 ">
                                             <button
                                                 onClick={handleSaveEdit}
                                                 className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700 mr-2"
