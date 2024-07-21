@@ -3,6 +3,8 @@
 ## Version
 0.1.0
 
+### Back-end  -  https://github.com/Pravinda-Bandara/Course-Managment-System-backend
+
 ## Introduction
 
 Welcome to our Course Management System! This platform allows visitors to register and log in, after which they can explore and enroll in courses. Users can view course details and enroll in subjects of their choice. Admin users have additional privileges to manage users, courses, and student enrollments. Our backend, powered by the MERN stack (MongoDB, Express.js, React.js, Node.js), efficiently handles HTTP requests, user authentication using JWT (JSON Web Tokens), and database interactions.
