@@ -43,7 +43,7 @@ export function LoginPage() {
     }, [userInfo, navigate, redirect]);
 
     return (
-        <div className="flex justify-center items-center h-screen opacity-70">
+        <div className="flex justify-center items-center h-screen">
             <div className="bg-white p-8 rounded-lg shadow-lg">
                 <h1 className="text-3xl font-bold text-gray-900 mb-4">Hi there!</h1>
                 <p className="text-gray-700 mb-6">

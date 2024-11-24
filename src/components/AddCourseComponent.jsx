@@ -22,8 +22,8 @@ const AddCourseModal = ({ isOpen, onClose, onSave }) => {
     if (!isOpen) return null;
 
     return (
-        <div className="fixed inset-0 bg-gray-500 bg-opacity-75  flex justify-center items-center  ">
-            <div className="bg-white p-6 rounded shadow-lg w-1/3 rounded-2xl">
+        <div className="fixed inset-0 bg-gray-700 flex justify-center items-center bg-opacity-60">
+            <div className="bg-white p-6 rounded shadow-lg w-1/3 rounded-2xl ">
                 <h2 className="text-xl font-bold mb-4">Add New Course</h2>
                 <form>
                     <div className="mb-4">

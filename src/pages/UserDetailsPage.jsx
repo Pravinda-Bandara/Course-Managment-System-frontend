@@ -83,7 +83,7 @@ export function UserDetailsPage() {
 
             <div className="flex gap-40">
                 <div className="w-3/5">
-                    <table className="min-w-full bg-white border opacity-80 ">
+                    <table className="min-w-full bg-white border">
                         <TableHeader columns={['Name', 'Duration', 'Instructor', 'Instructor Number', 'Enrolled', 'Action']} />
                         <tbody>
                         {courses.map((course) => (
@@ -112,7 +112,7 @@ export function UserDetailsPage() {
 
                 <div className="w-2/5">
                     <h1 className="text-3xl font-bold mb-4 text-white">Enrolled Courses</h1>
-                    <table className="min-w-full bg-white border opacity-90 ">
+                    <table className="min-w-full bg-white border">
                         <TableHeader columns={['Course Name']} />
                         <tbody>
                         {enrolledCourses.map((enrollment) => (

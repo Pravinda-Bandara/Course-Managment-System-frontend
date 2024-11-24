@@ -1,4 +1,3 @@
-// src/pages/CoursesPage.jsx
 import { useEffect, useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getEnrollmentsByStudentId, getDetailedEnrollments } from '../hooks/enrollmentHooks.js';
@@ -7,6 +6,8 @@ import TableHeader from "../components/TableHeader.jsx";
 import TableRow from "../components/TableRow.jsx";
 import AddCourseModal from "../components/AddCourseComponent.jsx";
 import { addCourse } from "../hooks/courseHooks.js";
+import { Info , CirclePlus} from "lucide-react"; // Import required icons
+import { toast } from 'react-toastify'; // Import Toastify
 
 const CoursesPage = () => {
     const [courses, setCourses] = useState([]);
@@ -26,6 +27,7 @@ const CoursesPage = () => {
                 setCourses(response);
             } catch (error) {
                 setError(error.message || 'Error fetching courses');
+                toast.error('Failed to load courses!'); // Error message
             } finally {
                 setIsLoading(false);
             }
@@ -37,6 +39,7 @@ const CoursesPage = () => {
                 setEnrolledCourses(enrollments);
             } catch (error) {
                 setEnrolledCourses([{ courseName: 'Not yet Enrolled', enrollmentId: '0' }]);
+                toast.error('Error loading enrolled courses!'); // Error message
             } finally {
                 setIsLoading(false);
             }
@@ -60,8 +63,10 @@ const CoursesPage = () => {
         try {
             const newCourse = await addCourse(courseData);
             setCourses([...courses, newCourse]);
+            toast.success('Course added successfully!'); // Success message
         } catch (error) {
             setError(error.message || 'Error adding course');
+            toast.error('Failed to add course!'); // Error message
         }
     };
 
@@ -81,14 +86,14 @@ const CoursesPage = () => {
                         {userInfo.role === 'admin' && (
                             <button
                                 onClick={handleAddCourseClick}
-                                className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-700"
+                                className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-700 flex items-center"
                             >
-                                Add New Course
+                                <CirclePlus className="mr-2" /> Add New Course
                             </button>
                         )}
                     </div>
                     <div className="overflow-x-auto mb-6 rounded-2xl">
-                        <table className="min-w-full bg-white border border-gray-200 opacity-80">
+                        <table className="min-w-full bg-white border border-gray-200">
                             <TableHeader columns={['Name', 'Duration', 'Instructor', 'Instructor Number', 'Enrolled', 'Action']} />
                             <tbody>
                             {courses.map((course) => (
@@ -104,9 +109,9 @@ const CoursesPage = () => {
                                             </span>,
                                         <button
                                             onClick={() => handleDetailsClick(course._id)}
-                                            className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700"
+                                            className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-700 flex items-center"
                                         >
-                                            Details
+                                            <Info className="mr-2" /> Details
                                         </button>
                                     ]}
                                 />
@@ -117,7 +122,7 @@ const CoursesPage = () => {
                 </div>
                 <div className="w-1/4">
                     <h1 className="text-2xl font-bold text-white mb-4">Enrolled Courses</h1>
-                    <div className="overflow-x-auto rounded-2xl opacity-80">
+                    <div className="overflow-x-auto rounded-2xl">
                         <table className="min-w-full bg-white border border-gray-200">
                             <TableHeader columns={['Course Name']} />
                             <tbody>
@@ -133,11 +138,11 @@ const CoursesPage = () => {
                 </div>
             </div>
             <div>
-            <AddCourseModal
-                isOpen={isModalOpen}
-                onClose={handleModalClose}
-                onSave={handleAddCourseSave}
-            />
+                <AddCourseModal
+                    isOpen={isModalOpen}
+                    onClose={handleModalClose}
+                    onSave={handleAddCourseSave}
+                />
             </div>
         </div>
     );

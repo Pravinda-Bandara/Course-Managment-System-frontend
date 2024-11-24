@@ -15,8 +15,8 @@ import CourseDetailsPage1 from "./pages/CourseDetailsPage.jsx";
 import UsersPage from "./pages/UsersPage.jsx";
 import {UserDetailsPage} from "./pages/UserDetailsPage.jsx";
 
-import AdminRoute from "./routeGuards /AdminRoute.jsx";
-import ProtectedRoute from "./routeGuards /ProtectedRoute.jsx";
+import AdminRoute from "./routeGuards/AdminRoute.jsx";
+import ProtectedRoute from "./routeGuards/ProtectedRoute.jsx";
 
 
 
