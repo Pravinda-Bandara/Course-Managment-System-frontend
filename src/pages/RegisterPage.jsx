@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import InputFieldComponent from '../components/InputFieldComponent.jsx';
 import { Store } from '../Store.jsx';
-import { register } from "../apiClient.js";
+import { register } from "../hooks/userHooks.js";
 import { registerUserValidationUtil } from "../utils/UserValidationUtil.js";
 import { getError } from "../utils/ErrorUtil.js";
 
