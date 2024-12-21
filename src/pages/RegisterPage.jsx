@@ -1,11 +1,11 @@
 import { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import apiClient from '../apiClient';
 import { toast } from 'react-toastify';
 import InputFieldComponent from '../components/InputFieldComponent.jsx';
 import { Store } from '../Store.jsx';
-import {registerUserValidationUtil} from "../utils/UserValidationUtil.js";
-import {getError} from "../utils/ErrorUtil.js";
+import { register } from "../apiClient.js";
+import { registerUserValidationUtil } from "../utils/UserValidationUtil.js";
+import { getError } from "../utils/ErrorUtil.js";
 
 export function RegisterPage() {
     const [name, setName] = useState('');
@@ -22,18 +22,12 @@ export function RegisterPage() {
     const handleRegister = async (event) => {
         event.preventDefault();
 
-        if (!registerUserValidationUtil(name, email,number, password, confirmPassword)) {
+        if (!registerUserValidationUtil(name, email, number, password, confirmPassword)) {
             return;
         }
 
-
         try {
-            const data = await registerUser({
-                name,
-                email,
-                password,
-                number
-            });
+            const data = await register({ name, email, password, number });
 
             navigate('/courses');
             dispatch({ type: 'USER_SIGNIN', payload: data });
@@ -50,15 +44,6 @@ export function RegisterPage() {
             navigate(redirect);
         }
     }, [userInfo]);
-
-    const registerUser = async ({ name, email, password, number }) => {
-        try {
-            const response = await apiClient.post('api/users/signup', { name, email, password, number });
-            return response.data;
-        } catch (error) {
-            throw new Error(error.response?.data?.message || 'Error registering');
-        }
-    };
 
     return (
         <div className="flex justify-center items-center h-screen">

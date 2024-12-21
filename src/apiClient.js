@@ -50,7 +50,7 @@ export const setupInterceptors = (navigate) => {
                         console.error('Internal Server Error: Please try again later.');
                         break;
                     default:
-                        console.error(`Unexpected Error: ${error.response.data.message || 'An error occurred.'}`);
+                        console.error(`Unexpected Error: ${error.response.data.error || 'An error occurred.'}`);
                         break;
                 }
             } else {
