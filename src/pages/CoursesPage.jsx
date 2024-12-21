@@ -39,7 +39,6 @@ const CoursesPage = () => {
                 setEnrolledCourses(enrollments);
             } catch (error) {
                 setEnrolledCourses([{ courseName: 'Not yet Enrolled', enrollmentId: '0' }]);
-                toast.error('Error loading enrolled courses!'); // Error message
             } finally {
                 setIsLoading(false);
             }

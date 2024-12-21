@@ -42,10 +42,10 @@ export const setupInterceptors = (navigate) => {
                         console.warn('Forbidden: You do not have the required permissions.');
                         navigate('/unauthorized'); // Optional: Redirect to an unauthorized page
                         break;
-                    case 404:
+/*                     case 404:
                         console.error('Not Found: The requested resource could not be found.');
                         navigate('/not-found'); // Optional: Redirect to a 404 page
-                        break;
+                        break; */
                     case 500:
                         console.error('Internal Server Error: Please try again later.');
                         break;
