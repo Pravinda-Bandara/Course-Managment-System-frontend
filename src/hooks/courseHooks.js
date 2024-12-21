@@ -1,47 +1,25 @@
 import apiClient from "../apiClient.js";
 
-
-export const getCourses = async () => {
+const handleApiResponse = async (apiCall) => {
     try {
-        const response = await apiClient.get('api/courses/');
-        return response.data;
+        const response = await apiCall();
+        return response.data.data;
     } catch (error) {
-        throw new Error(error.response?.data?.message || 'Error fetching courses');
+        throw new Error(error.response?.data?.error || 'An error occurred');
     }
 };
 
-export const getCourseById = async (courseId) => {
-    try {
-        const response = await apiClient.get(`api/courses/${courseId}`);
-        return response.data;
-    } catch (error) {
-        throw new Error(error.response?.data?.message || 'Error fetching course');
-    }
-};
+export const getCourses = async () => 
+    handleApiResponse(() => apiClient.get('api/courses/'));
 
-export const deleteCourse = async (courseId) => {
-    try {
-        const response = await apiClient.delete(`api/courses/${courseId}`);
-        return response.data;
-    } catch (error) {
-        throw new Error(error.response?.data?.message || 'Error deleting course');
-    }
-};
+export const getCourseById = async (courseId) => 
+    handleApiResponse(() => apiClient.get(`api/courses/${courseId}`));
 
-export const updateCourse = async (courseId, courseData) => {
-    try {
-        const response = await apiClient.patch(`api/courses/${courseId}`, courseData);
-        return response.data;
-    } catch (error) {
-        throw new Error(error.response?.data?.message || 'Error updating course');
-    }
-};
+export const deleteCourse = async (courseId) => 
+    handleApiResponse(() => apiClient.delete(`api/courses/${courseId}`));
 
-export const addCourse = async (courseData) => {
-    try {
-        const response = await apiClient.post('api/courses/', courseData);
-        return response.data;
-    } catch (error) {
-        throw new Error(error.response?.data?.message || 'Error creating course');
-    }
-};
+export const updateCourse = async (courseId, courseData) => 
+    handleApiResponse(() => apiClient.patch(`api/courses/${courseId}`, courseData));
+
+export const addCourse = async (courseData) => 
+    handleApiResponse(() => apiClient.post('api/courses/', courseData));
