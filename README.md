@@ -3,7 +3,8 @@
 ## Version
 0.1.0
 
-### Back-end  -  https://github.com/Pravinda-Bandara/Course-Managment-System-backend
+### Spring-Boot  -https://github.com/Pravinda-Bandara/Course-Managment-System-backend
+### NodeJS + Express  -  https://github.com/Pravinda-Bandara/Course-Managment-System-backend
 
 ## Introduction
 
